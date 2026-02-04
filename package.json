@@ -2,7 +2,7 @@
   "name": "azure-foundry-model-router-demo",
   "private": true,
   "version": "1.0.0",
-  "description": "Interactive demo comparing Azure AI Foundry Model Router with standard deployments",
+  "description": "Interactive demo comparing Microsoft Foundry Model Router with standard deployments",
   "author": "Azure AI Community",
   "license": "MIT",
   "repository": {

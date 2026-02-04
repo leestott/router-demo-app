@@ -34,8 +34,7 @@ export function useCompletion() {
           },
           body: JSON.stringify({
             messages: [{ role: 'user', content: prompt.prompt }],
-            max_tokens: 1024,
-            temperature: 0.7,
+            max_completion_tokens: 1024,
           }),
         }
       );

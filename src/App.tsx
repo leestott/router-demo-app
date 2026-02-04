@@ -58,6 +58,21 @@ function App() {
     setIsRunning(false);
   }, [selectedPrompt, routingMode, complete, addResult]);
 
+  const runBothWithPrompt = useCallback(async (prompt: PromptItem) => {
+    setIsRunning(true);
+    try {
+      const [routerResult, standardResult] = await Promise.all([
+        complete('router', prompt, routingMode),
+        complete('standard', prompt),
+      ]);
+      addResult(routerResult);
+      addResult(standardResult);
+    } catch (e) {
+      console.error('Comparison error:', e);
+    }
+    setIsRunning(false);
+  }, [routingMode, complete, addResult]);
+
   const runAll = useCallback(async () => {
     setIsRunning(true);
     for (const prompt of PROMPT_SET) {
@@ -82,7 +97,7 @@ function App() {
           🔀 Model Router vs 📌 Standard Deployment
         </h1>
         <p className="text-gray-600 text-sm mt-1">
-          Azure AI Foundry Model Router Demo — Compare intelligent routing vs fixed model
+          Microsoft Foundry Model Router Demo — Compare intelligent routing vs fixed model
         </p>
       </header>
 
@@ -91,11 +106,13 @@ function App() {
         <div className="lg:col-span-1 space-y-4">
           <MetadataBadge routingMode={routingMode} />
           <div className="bg-white rounded-lg shadow p-4">
-            <label className="text-sm font-medium">Routing Mode (Demo)</label>
+            <label htmlFor="routing-mode" className="text-sm font-medium">Routing Mode (Demo)</label>
             <select
+              id="routing-mode"
               value={routingMode}
               onChange={e => setRoutingMode(e.target.value as RoutingMode)}
               className="mt-1 w-full p-2 border rounded"
+              aria-label="Select routing mode"
             >
               <option value="balanced">Balanced (Default)</option>
               <option value="cost">Cost-Optimized</option>
@@ -105,7 +122,11 @@ function App() {
               Change in Foundry Portal to affect routing
             </p>
           </div>
-          <PromptSelector selectedPrompt={selectedPrompt} onSelect={setSelectedPrompt} />
+          <PromptSelector 
+            selectedPrompt={selectedPrompt} 
+            onSelect={setSelectedPrompt}
+            onRunWithPrompt={runBothWithPrompt}
+          />
         </div>
 
         {/* Main content */}
