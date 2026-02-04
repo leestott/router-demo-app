@@ -427,7 +427,7 @@ Contributions welcome! Please:
 
 ## 📄 License
 
-This project is provided as a demonstration/sample application. Check with your organization for licensing requirements.
+This project is licensed under the [MIT License](LICENSE).
 
 ---
 
