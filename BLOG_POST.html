@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A hands-on demo of Microsoft Foundry Model Router — intelligent model routing with real benchmark data showing 4.5–14.2% cost savings.">
+  <meta name="keywords" content="Azure, AI, Model Router, LLM, Cost Optimisation, TypeScript, React, Microsoft Foundry">
+  <meta name="author" content="Azure AI Community">
+  <title>Optimising AI Costs with Microsoft Foundry Model Router</title>
+  <style>
+    :root {
+      --color-primary: #0078D4;
+      --color-primary-dark: #005A9E;
+      --color-bg: #ffffff;
+      --color-bg-alt: #f9fafb;
+      --color-text: #1f2937;
+      --color-text-muted: #6b7280;
+      --color-border: #e5e7eb;
+      --color-code-bg: #f3f4f6;
+      --color-link: #0078D4;
+      --color-success: #059669;
+      --color-warning: #d97706;
+      --max-width: 800px;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      --font-mono: 'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background: var(--color-bg);
+      line-height: 1.7;
+      font-size: 17px;
+    }
+
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      padding: 3rem 0 2rem;
+      border-bottom: 2px solid var(--color-border);
+      margin-bottom: 2.5rem;
+    }
+    header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+    header .subtitle {
+      font-size: 1.15rem;
+      color: var(--color-text-muted);
+      font-weight: 400;
+    }
+
+    /* Headings */
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin: 2.5rem 0 1rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+    h2:first-of-type { border-top: none; padding-top: 0; }
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 2rem 0 0.75rem;
+      color: var(--color-text);
+    }
+
+    /* Paragraphs & inline */
+    p { margin: 0 0 1.25rem; }
+    strong { font-weight: 600; }
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      background: var(--color-code-bg);
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+    }
+    a {
+      color: var(--color-link);
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+
+    /* Lists */
+    ul, ol { margin: 0 0 1.25rem 1.5rem; }
+    li { margin-bottom: 0.4rem; }
+
+    /* Blockquote */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--color-primary);
+      background: var(--color-bg-alt);
+      border-radius: 0 6px 6px 0;
+    }
+    blockquote p { margin-bottom: 0; }
+    blockquote strong { color: var(--color-primary-dark); }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0;
+      font-size: 0.92rem;
+    }
+    th, td {
+      padding: 0.6rem 0.8rem;
+      border: 1px solid var(--color-border);
+      text-align: left;
+    }
+    th {
+      background: var(--color-bg-alt);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    td code {
+      font-size: 0.85em;
+    }
+
+    /* Code blocks */
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 1.25rem 0;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: inherit;
+    }
+    .comment { color: #94a3b8; }
+    .keyword { color: #c084fc; }
+    .string { color: #86efac; }
+    .property { color: #93c5fd; }
+
+    /* Images */
+    figure {
+      margin: 1.5rem 0;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid var(--color-border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    figcaption {
+      text-align: center;
+      font-size: 0.88rem;
+      color: var(--color-text-muted);
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    /* Decision tree */
+    .decision-tree {
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin: 1.25rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      line-height: 1.8;
+      white-space: pre;
+    }
+
+    /* Tags */
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1.5rem 0;
+    }
+    .tag {
+      display: inline-block;
+      background: var(--color-primary);
+      color: #fff;
+      font-size: 0.8rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-weight: 500;
+    }
+
+    /* Warning box */
+    .warning {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      background: #fffbeb;
+      border: 1px solid #fbbf24;
+      border-radius: 8px;
+    }
+    .warning p { margin-bottom: 0; }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem 0 1rem;
+      border-top: 1px solid var(--color-border);
+      margin-top: 3rem;
+      color: var(--color-text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      header h1 { font-size: 1.6rem; }
+      h2 { font-size: 1.35rem; }
+      body { font-size: 16px; }
+      .container { padding: 1rem 1rem 3rem; }
+      table { font-size: 0.82rem; }
+      th, td { padding: 0.4rem 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <header>
+      <h1>Optimising AI Costs with Microsoft Foundry Model Router</h1>
+      <p class="subtitle">A hands-on demo of intelligent model routing — with real benchmark data</p>
+    </header>
+
+    <!-- TL;DR -->
+    <h2>TL;DR</h2>
+    <p>Microsoft Foundry Model Router analyses each prompt in real-time and forwards it to the most appropriate LLM from a pool of underlying models. Simple requests go to fast, cheap models; complex requests go to premium ones — all automatically.</p>
+    <p>We built an interactive demo app so you can see the routing decisions, measure latencies, and compare costs yourself. This post walks through how it works, what we measured, and when it makes sense to use.</p>
+
+    <!-- The Problem -->
+    <h2>The Problem: One Model for Everything Is Wasteful</h2>
+    <p>Traditional deployments force a single choice:</p>
+    <table>
+      <thead>
+        <tr><th>Strategy</th><th>Upside</th><th>Downside</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Use a small model</td><td>Fast, cheap</td><td>Struggles with complex tasks</td></tr>
+        <tr><td>Use a large model</td><td>Handles everything</td><td>Overpay for simple tasks</td></tr>
+        <tr><td>Build your own router</td><td>Full control</td><td>Maintenance burden; hard to optimise</td></tr>
+      </tbody>
+    </table>
+    <p>Most production workloads are <strong>mixed-complexity</strong>. Classification, FAQ look-ups, and data extraction sit alongside code analysis, multi-constraint planning, and long-document summarisation. Paying premium-model prices for the simple 40% is money left on the table.</p>
+
+    <!-- The Solution -->
+    <h2>The Solution: Model Router</h2>
+    <p>Model Router is a <strong>trained language model</strong> deployed as a single Azure endpoint. For each incoming request it:</p>
+    <ol>
+      <li><strong>Analyses the prompt</strong> — complexity, task type, context length</li>
+      <li><strong>Selects an underlying model</strong> from the routing pool</li>
+      <li><strong>Forwards the request</strong> and returns the response</li>
+      <li><strong>Exposes the choice</strong> via the <code>response.model</code> field</li>
+    </ol>
+    <p>You interact with one deployment. No if/else routing logic in your code.</p>
+
+    <h3>Routing Modes</h3>
+    <table>
+      <thead>
+        <tr><th>Mode</th><th>Goal</th><th>Trade-off</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Balanced</strong> (default)</td><td>Best cost-quality ratio</td><td>General-purpose</td></tr>
+        <tr><td><strong>Cost</strong></td><td>Minimise spend</td><td>May use smaller models more aggressively</td></tr>
+        <tr><td><strong>Quality</strong></td><td>Maximise accuracy</td><td>Higher cost for complex tasks</td></tr>
+      </tbody>
+    </table>
+    <p>Modes are configured in the Foundry Portal — no code change needed to switch.</p>
+
+    <!-- Building the Demo -->
+    <h2>Building the Demo</h2>
+    <p>To make routing decisions tangible, we built a React + TypeScript app that sends the <strong>same prompt</strong> through both Model Router and a fixed standard deployment (e.g. GPT-5-nano), then compares:</p>
+    <ul>
+      <li><strong>Which model</strong> the router selected</li>
+      <li><strong>Latency</strong> (ms)</li>
+      <li><strong>Token usage</strong> (prompt + completion)</li>
+      <li><strong>Estimated cost</strong> (based on per-model pricing)</li>
+    </ul>
+
+    <figure>
+      <img src="screenshots/app-prompt-selected.png" alt="Application interface showing prompt selection and routing mode">
+      <figcaption>Select a prompt, choose a routing mode, and hit Run Both to compare side-by-side</figcaption>
+    </figure>
+
+    <h3>What You Can Do</h3>
+    <ul>
+      <li><strong>10 pre-built prompts</strong> spanning simple classification to complex multi-constraint planning</li>
+      <li><strong>Custom prompt input</strong> — enter any text and benchmarks run automatically</li>
+      <li><strong>Three routing modes</strong> — switch and re-run to see how distribution changes</li>
+      <li><strong>Batch mode</strong> — run all 10 prompts in one click to gather aggregate stats</li>
+    </ul>
+
+    <h3>API Integration</h3>
+    <p>The integration is a standard Azure OpenAI chat completion call. The only difference is the deployment name (<code>model-router</code> instead of a specific model):</p>
+    <pre><code><span class="keyword">const</span> response = <span class="keyword">await</span> <span class="property">fetch</span>(
+  <span class="string">`${endpoint}/openai/deployments/model-router/chat/completions?api-version=2024-10-21`</span>,
+  {
+    <span class="property">method</span>: <span class="string">'POST'</span>,
+    <span class="property">headers</span>: {
+      <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span>,
+      <span class="string">'api-key'</span>: apiKey,
+    },
+    <span class="property">body</span>: JSON.<span class="property">stringify</span>({
+      <span class="property">messages</span>: [{ <span class="property">role</span>: <span class="string">'user'</span>, <span class="property">content</span>: prompt }],
+      <span class="property">max_completion_tokens</span>: <span class="string">1024</span>,
+    }),
+  }
+);
+
+<span class="keyword">const</span> data = <span class="keyword">await</span> response.<span class="property">json</span>();
+
+<span class="comment">// The key insight: response.model reveals the underlying model</span>
+<span class="keyword">const</span> selectedModel = data.<span class="property">model</span>; <span class="comment">// e.g. "gpt-5-nano-2025-08-07"</span></code></pre>
+    <p>That <code>data.model</code> field is what makes cost tracking and distribution analysis possible.</p>
+
+    <!-- Results -->
+    <h2>Results: What the Data Shows</h2>
+    <p>We ran all 10 prompts through both Model Router (Balanced mode) and a fixed standard deployment.</p>
+    <blockquote>
+      <p><strong>Note</strong>: Results vary by run, region, model versions, and Azure load. These numbers are from a representative sample run.</p>
+    </blockquote>
+
+    <figure>
+      <img src="screenshots/balanced-mode-full-results.png" alt="Full results comparison in Balanced mode">
+      <figcaption>Side-by-side comparison across all 10 prompts in Balanced mode</figcaption>
+    </figure>
+
+    <h3>Summary</h3>
+    <table>
+      <thead>
+        <tr><th>Metric</th><th>Router (Balanced)</th><th>Standard (GPT-5-nano)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Avg Latency</td><td>~7,800 ms</td><td>~7,700 ms</td></tr>
+        <tr><td>Total Cost (10 prompts)</td><td>~$0.029</td><td>~$0.030</td></tr>
+        <tr><td><strong>Cost Savings</strong></td><td><strong>~4.5%</strong></td><td>—</td></tr>
+        <tr><td>Models Used</td><td>4</td><td>1</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Model Distribution</h3>
+    <p>The router used <strong>4 different models</strong> across 10 prompts:</p>
+    <table>
+      <thead>
+        <tr><th>Model</th><th>Requests</th><th>Share</th><th>Typical Use</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>gpt-5-nano</code></td><td>5</td><td>50%</td><td>Classification, summarisation, planning</td></tr>
+        <tr><td><code>gpt-5-mini</code></td><td>2</td><td>20%</td><td>FAQ answers, data extraction</td></tr>
+        <tr><td><code>gpt-oss-120b</code></td><td>2</td><td>20%</td><td>Long-context analysis, creative tasks</td></tr>
+        <tr><td><code>gpt-4.1-mini</code></td><td>1</td><td>10%</td><td>Complex debugging &amp; reasoning</td></tr>
+      </tbody>
+    </table>
+
+    <figure>
+      <img src="screenshots/app-full-distribution.png" alt="Model distribution chart">
+      <figcaption>Routing distribution chart — the router favours efficient models for simple prompts</figcaption>
+    </figure>
+
+    <h3>Across All Three Modes</h3>
+    <table>
+      <thead>
+        <tr><th>Metric</th><th>Balanced</th><th>Cost-Optimised</th><th>Quality-Optimised</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Cost Savings</td><td>~4.5%</td><td>~4.7%</td><td>~14.2%</td></tr>
+        <tr><td>Avg Latency (Router)</td><td>~7,800 ms</td><td>~7,800 ms</td><td>~6,800 ms</td></tr>
+        <tr><td>Avg Latency (Standard)</td><td>~7,700 ms</td><td>~7,300 ms</td><td>~8,300 ms</td></tr>
+        <tr><td>Primary Goal</td><td>Balance cost + quality</td><td>Minimise spend</td><td>Maximise accuracy</td></tr>
+        <tr><td>Model Selection</td><td>Mixed (4 models)</td><td>Prefers cheaper</td><td>Prefers premium</td></tr>
+      </tbody>
+    </table>
+
+    <figure>
+      <img src="screenshots/cost-mode-full-results.png" alt="Cost-optimised mode results">
+      <figcaption>Cost-optimised mode — routes more aggressively to nano/mini models</figcaption>
+    </figure>
+
+    <figure>
+      <img src="screenshots/quality-mode-full-results.png" alt="Quality-optimised mode results">
+      <figcaption>Quality-optimised mode — routes to larger models for complex tasks</figcaption>
+    </figure>
+
+    <!-- Analysis -->
+    <h2>Analysis</h2>
+
+    <h3>What Worked Well</h3>
+    <p><strong>Intelligent distribution</strong> — The router didn't just default to one model. It used 4 different models and mapped prompt complexity to model capability: simple classification → nano, FAQ answers → mini, long-context documents → oss-120b, complex debugging → 4.1-mini.</p>
+    <p><strong>Measurable cost savings across all modes</strong> — 4.5% in Balanced, 4.7% in Cost, and 14.2% in Quality mode. Quality mode was the surprise winner — by choosing faster, cheaper models for simple prompts, it actually saved the most while still routing complex requests to capable models.</p>
+    <p><strong>Zero routing logic in application code</strong> — One endpoint, one deployment name. The complexity lives in Azure's infrastructure, not yours.</p>
+    <p><strong>Operational flexibility</strong> — Switch between Balanced, Cost, and Quality modes in the Foundry Portal without redeploying your app. Need to cut costs for a high-traffic period? Switch to Cost mode. Need accuracy for a compliance run? Switch to Quality.</p>
+    <p><strong>Future-proofing</strong> — As Azure adds new models to the routing pool, your deployment benefits automatically. No code changes needed.</p>
+
+    <h3>Trade-offs to Consider</h3>
+    <p><strong>Latency is comparable, not always faster</strong> — In Balanced mode, Router averaged ~7,800 ms vs Standard's ~7,700 ms — nearly identical. In Quality mode, the Router was actually <em>faster</em> (~6,800 ms vs ~8,300 ms) because it chose more efficient models for simple prompts. The delta depends on which models the router selects.</p>
+    <p><strong>Savings scale with workload diversity</strong> — Our 10-prompt test set showed 4.5–14.2% savings. Production workloads with a wider spread of simple vs complex prompts should see larger savings, since the router has more opportunity to route simple requests to cheaper models.</p>
+    <p><strong>Opaque routing decisions</strong> — You can see <em>which</em> model was picked via <code>response.model</code>, but you can't see <em>why</em>. For most applications this is fine; for debugging edge cases you may want to test specific prompts in the demo first.</p>
+
+    <!-- Custom Prompt Testing -->
+    <h2>Custom Prompt Testing</h2>
+    <p>One of the most practical features of the demo is testing <strong>your own prompts</strong> before committing to Model Router in production.</p>
+
+    <figure>
+      <img src="screenshots/custom-prompt-entered.png" alt="Custom prompt input">
+      <figcaption>Enter any prompt — the quantum computing example is a medium-complexity educational prompt</figcaption>
+    </figure>
+
+    <figure>
+      <img src="screenshots/custom-prompt-results.png" alt="Custom prompt results">
+      <figcaption>Benchmarks execute automatically, showing the selected model, latency, tokens, and cost</figcaption>
+    </figure>
+
+    <p><strong>Workflow:</strong></p>
+    <ol>
+      <li>Click <strong>✏️ Custom</strong> in the prompt selector</li>
+      <li>Enter your production-representative prompt</li>
+      <li>Click <strong>✓ Use This Prompt</strong> — Router and Standard run automatically</li>
+      <li>Compare results — repeat with different routing modes</li>
+      <li>Use the data to inform your deployment strategy</li>
+    </ol>
+    <p>This lets you <strong>predict costs and validate routing behaviour</strong> with your actual workload before going to production.</p>
+
+    <!-- When to Use -->
+    <h2>When to Use Model Router</h2>
+
+    <h3>Great Fit</h3>
+    <ul>
+      <li><strong>Mixed-complexity workloads</strong> — chatbots, customer service, content pipelines</li>
+      <li><strong>Cost-sensitive deployments</strong> — where even single-digit percentage savings matter at scale</li>
+      <li><strong>Teams wanting simplicity</strong> — one endpoint beats managing multi-model routing logic</li>
+      <li><strong>Rapid experimentation</strong> — try new models without changing application code</li>
+    </ul>
+
+    <h3>Consider Carefully</h3>
+    <ul>
+      <li><strong>Ultra-low-latency requirements</strong> — if you need sub-second responses, the routing overhead matters</li>
+      <li><strong>Single-task, single-model workloads</strong> — if one model is clearly optimal for 100% of your traffic, a router adds complexity without benefit</li>
+      <li><strong>Full control over model selection</strong> — if you need deterministic model choice per request</li>
+    </ul>
+
+    <h3>Mode Selection Guide</h3>
+    <div class="decision-tree">Is accuracy critical (compliance, legal, medical)?
+  └─ YES → Quality-Optimised
+  └─ NO  → Strict budget constraints?
+             └─ YES → Cost-Optimised
+             └─ NO  → Balanced (recommended)</div>
+
+    <!-- Best Practices -->
+    <h2>Best Practices</h2>
+    <ol>
+      <li><strong>Start with Balanced mode</strong> — measure actual results, then optimise</li>
+      <li><strong>Test with your real prompts</strong> — use the Custom Prompt feature to validate routing before production</li>
+      <li><strong>Monitor model distribution</strong> — track which models handle your traffic over time</li>
+      <li><strong>Compare against a baseline</strong> — always keep a standard deployment to measure savings</li>
+      <li><strong>Review regularly</strong> — as new models enter the routing pool, distributions shift</li>
+    </ol>
+
+    <!-- Technical Stack -->
+    <h2>Technical Stack</h2>
+    <table>
+      <thead>
+        <tr><th>Technology</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>React 19 + TypeScript 5.9</td><td>UI and type safety</td></tr>
+        <tr><td>Vite 7</td><td>Dev server and build tool</td></tr>
+        <tr><td>Tailwind CSS 4</td><td>Styling</td></tr>
+        <tr><td>Recharts 3</td><td>Distribution and comparison charts</td></tr>
+        <tr><td>Azure OpenAI API (2024-10-21)</td><td>Model Router and standard completions</td></tr>
+      </tbody>
+    </table>
+    <p>Security measures include an <code>ErrorBoundary</code> for crash resilience, sanitised API error messages, <code>AbortController</code> request timeouts, input length validation, and restrictive security headers. API keys are loaded from environment variables and gitignored.</p>
+
+    <div class="warning">
+      <p>⚠️ <strong>This demo calls Azure OpenAI directly from the browser.</strong> This is fine for local development. For production, proxy through a backend and use <a href="https://learn.microsoft.com/azure/ai-services/openai/how-to/managed-identity" target="_blank" rel="noopener noreferrer">Managed Identity</a>.</p>
+    </div>
+
+    <!-- Try It Yourself -->
+    <h2>Try It Yourself</h2>
+
+    <h3>Quick Start</h3>
+    <pre><code>git clone &lt;repository-url&gt;
+cd router-demo-app
+
+<span class="comment"># Option A: Use the setup script (recommended)</span>
+<span class="comment"># Windows:</span>
+.\setup.ps1 -StartDev
+<span class="comment"># macOS/Linux:</span>
+chmod +x setup.sh &amp;&amp; ./setup.sh --start-dev
+
+<span class="comment"># Option B: Manual</span>
+npm install
+cp .env.example .env.local
+<span class="comment"># Edit .env.local with your Azure credentials</span>
+npm run dev</code></pre>
+    <p>Open <code>http://localhost:5173</code>, select a prompt, and click <strong>⚡ Run Both</strong>.</p>
+
+    <h3>Get Your Credentials</h3>
+    <ol>
+      <li>Go to <a href="https://ai.azure.com" target="_blank" rel="noopener noreferrer">ai.azure.com</a> → open your project</li>
+      <li>Copy the <strong>Project connection string</strong> (endpoint URL)</li>
+      <li>Navigate to <strong>Deployments</strong> → confirm <code>model-router</code> is deployed</li>
+      <li>Get your <strong>API key</strong> from <strong>Project Settings → Keys</strong></li>
+    </ol>
+
+    <h3>Configuration</h3>
+    <p>Edit <code>.env.local</code>:</p>
+    <pre><code>VITE_ROUTER_ENDPOINT=https://your-resource.cognitiveservices.azure.com
+VITE_ROUTER_API_KEY=your-api-key
+VITE_ROUTER_DEPLOYMENT=model-router
+
+VITE_STANDARD_ENDPOINT=https://your-resource.cognitiveservices.azure.com
+VITE_STANDARD_API_KEY=your-api-key
+VITE_STANDARD_DEPLOYMENT=gpt-5-nano</code></pre>
+
+    <!-- Ideas for Enhancement -->
+    <h2>Ideas for Enhancement</h2>
+    <ul>
+      <li><strong>Historical analysis</strong> — persist results to track routing trends over time</li>
+      <li><strong>Cost projections</strong> — estimate monthly spend based on prompt patterns and volume</li>
+      <li><strong>A/B testing framework</strong> — compare modes with statistical significance</li>
+      <li><strong>Streaming support</strong> — show model selection for streaming responses</li>
+      <li><strong>Export reports</strong> — download benchmark data as CSV/JSON for further analysis</li>
+    </ul>
+
+    <!-- Conclusion -->
+    <h2>Conclusion</h2>
+    <p>Model Router addresses a real problem: most AI workloads have mixed complexity, but most deployments use a single model. By routing each request to the right model automatically, you get:</p>
+    <ul>
+      <li><strong>Cost savings</strong> (~4.5–14.2% measured across modes, scaling with volume)</li>
+      <li><strong>Intelligent distribution</strong> (4 models used, zero routing code)</li>
+      <li><strong>Operational simplicity</strong> (one endpoint, mode changes via portal)</li>
+      <li><strong>Future-proofing</strong> (new models added to the pool automatically)</li>
+    </ul>
+    <p>The latency trade-off is minimal — in Quality mode, the Router was actually <em>faster</em> than the standard deployment. The real value is <strong>flexibility</strong>: tune for cost, quality, or balance without touching your code.</p>
+    <p><strong>Ready to try it?</strong> Clone the demo repository, plug in your Azure credentials, and test with your own prompts.</p>
+
+    <!-- Resources -->
+    <h2>Resources</h2>
+    <ul>
+      <li><a href="https://learn.microsoft.com/azure/ai-foundry/openai/concepts/model-router" target="_blank" rel="noopener noreferrer">Model Router Concepts</a> — Official documentation</li>
+      <li><a href="https://learn.microsoft.com/azure/ai-foundry/openai/how-to/model-router" target="_blank" rel="noopener noreferrer">Model Router How-To</a> — Deployment guide</li>
+      <li><a href="https://ai.azure.com" target="_blank" rel="noopener noreferrer">Microsoft Foundry Portal</a> — Deploy and manage</li>
+      <li><a href="https://ai.azure.com/catalog/models/model-router" target="_blank" rel="noopener noreferrer">Model Router in the Catalog</a> — Model listing</li>
+      <li><a href="https://learn.microsoft.com/azure/ai-services/openai/how-to/managed-identity" target="_blank" rel="noopener noreferrer">Azure OpenAI Managed Identity</a> — Production auth</li>
+    </ul>
+
+    <!-- Tags -->
+    <div class="tags">
+      <span class="tag">#Azure</span>
+      <span class="tag">#AI</span>
+      <span class="tag">#ModelRouter</span>
+      <span class="tag">#LLM</span>
+      <span class="tag">#CostOptimisation</span>
+      <span class="tag">#TypeScript</span>
+      <span class="tag">#React</span>
+    </div>
+
+    <footer>
+      <p>Built to explore Model Router and share findings with the developer community.<br>
+      Feedback and contributions welcome — open an issue or PR on GitHub.</p>
+    </footer>
+
+  </div>
+</body>
+</html>
