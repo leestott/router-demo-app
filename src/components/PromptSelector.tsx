@@ -60,9 +60,11 @@ export function PromptSelector({ selectedPrompt, onSelect, onRunWithPrompt }: Pr
               placeholder="Type your prompt here to test with the model router..."
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
               rows={8}
+              maxLength={50000}
+              aria-label="Custom prompt text"
             />
             <div className="text-xs text-gray-500 mt-1">
-              {customPromptText.length} characters
+              {customPromptText.length.toLocaleString()} / 50,000 characters
             </div>
           </div>
           <div className="flex gap-2">

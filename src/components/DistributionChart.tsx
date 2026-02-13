@@ -31,8 +31,8 @@ export function DistributionChart({ stats }: Props) {
           <YAxis dataKey="model" type="category" width={80} tick={{ fontSize: 10 }} />
           <Tooltip />
           <Bar dataKey="count" name="Requests">
-            {data.map((_, index) => (
-              <Cell key={index} fill={COLORS[index % COLORS.length]} />
+            {data.map((entry, index) => (
+              <Cell key={entry.model} fill={COLORS[index % COLORS.length]} />
             ))}
           </Bar>
         </BarChart>

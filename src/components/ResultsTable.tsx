@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import type { CompletionResult } from '../types';
 
 interface Props {
@@ -38,9 +39,9 @@ export function ResultsTable({ results }: Props) {
         </thead>
         <tbody>
           {Object.entries(grouped).map(([promptId, data]) => (
-            <>
+            <Fragment key={promptId}>
               {data.router && (
-                <tr key={`${promptId}-router`} className="border-b bg-blue-50">
+                <tr className="border-b bg-blue-50">
                   <td className="p-2 font-medium">{data.label}</td>
                   <td className="p-2">
                     <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Router</span>
@@ -59,7 +60,7 @@ export function ResultsTable({ results }: Props) {
                 </tr>
               )}
               {data.standard && (
-                <tr key={`${promptId}-standard`} className="border-b">
+                <tr className="border-b">
                   <td className="p-2 font-medium">{!data.router ? data.label : ''}</td>
                   <td className="p-2">
                     <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs">Standard</span>
@@ -73,7 +74,7 @@ export function ResultsTable({ results }: Props) {
                   <td className="p-2 text-right">${data.standard.estimatedCost.toFixed(5)}</td>
                 </tr>
               )}
-            </>
+            </Fragment>
           ))}
         </tbody>
       </table>

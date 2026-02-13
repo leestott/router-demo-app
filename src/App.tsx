@@ -24,8 +24,8 @@ function App() {
     try {
       const result = await complete('router', selectedPrompt, routingMode);
       addResult(result);
-    } catch (e) {
-      console.error('Router error:', e);
+    } catch {
+      // Error is already captured by useCompletion's setError
     }
     setIsRunning(false);
   }, [selectedPrompt, routingMode, complete, addResult]);
@@ -36,8 +36,8 @@ function App() {
     try {
       const result = await complete('standard', selectedPrompt);
       addResult(result);
-    } catch (e) {
-      console.error('Standard error:', e);
+    } catch {
+      // Error is already captured by useCompletion's setError
     }
     setIsRunning(false);
   }, [selectedPrompt, complete, addResult]);
@@ -46,14 +46,14 @@ function App() {
     if (!selectedPrompt) return;
     setIsRunning(true);
     try {
-      const [routerResult, standardResult] = await Promise.all([
+      const [routerResult, standardResult] = await Promise.allSettled([
         complete('router', selectedPrompt, routingMode),
         complete('standard', selectedPrompt),
       ]);
-      addResult(routerResult);
-      addResult(standardResult);
-    } catch (e) {
-      console.error('Comparison error:', e);
+      if (routerResult.status === 'fulfilled') addResult(routerResult.value);
+      if (standardResult.status === 'fulfilled') addResult(standardResult.value);
+    } catch {
+      // Error is already captured by useCompletion's setError
     }
     setIsRunning(false);
   }, [selectedPrompt, routingMode, complete, addResult]);
@@ -61,14 +61,14 @@ function App() {
   const runBothWithPrompt = useCallback(async (prompt: PromptItem) => {
     setIsRunning(true);
     try {
-      const [routerResult, standardResult] = await Promise.all([
+      const [routerResult, standardResult] = await Promise.allSettled([
         complete('router', prompt, routingMode),
         complete('standard', prompt),
       ]);
-      addResult(routerResult);
-      addResult(standardResult);
-    } catch (e) {
-      console.error('Comparison error:', e);
+      if (routerResult.status === 'fulfilled') addResult(routerResult.value);
+      if (standardResult.status === 'fulfilled') addResult(standardResult.value);
+    } catch {
+      // Error is already captured by useCompletion's setError
     }
     setIsRunning(false);
   }, [routingMode, complete, addResult]);
@@ -77,14 +77,14 @@ function App() {
     setIsRunning(true);
     for (const prompt of PROMPT_SET) {
       try {
-        const [routerResult, standardResult] = await Promise.all([
+        const [routerResult, standardResult] = await Promise.allSettled([
           complete('router', prompt, routingMode),
           complete('standard', prompt),
         ]);
-        addResult(routerResult);
-        addResult(standardResult);
-      } catch (e) {
-        console.error(`Error on prompt ${prompt.id}:`, e);
+        if (routerResult.status === 'fulfilled') addResult(routerResult.value);
+        if (standardResult.status === 'fulfilled') addResult(standardResult.value);
+      } catch {
+        // Error is already captured by useCompletion's setError
       }
     }
     setIsRunning(false);
@@ -158,15 +158,15 @@ function App() {
       <footer className="max-w-7xl mx-auto mt-8 text-center text-xs text-gray-500">
         <p>
           📚 Docs:{' '}
-          <a href="https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/model-router?view=foundry-classic" className="text-blue-600 hover:underline">
+          <a href="https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/model-router?view=foundry-classic" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">
             Concepts
           </a>{' '}
           |{' '}
-          <a href="https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/model-router?view=foundry" className="text-blue-600 hover:underline">
+          <a href="https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/model-router?view=foundry" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">
             How-To
           </a>{' '}
           |{' '}
-          <a href="https://ai.azure.com/catalog/models/model-router" className="text-blue-600 hover:underline">
+          <a href="https://ai.azure.com/catalog/models/model-router" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">
             Catalog
           </a>
         </p>
